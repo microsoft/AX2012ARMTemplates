@@ -2,12 +2,6 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "assetLocation": {
-      "type": "string",
-      "metadata": {
-        "description": "URI where the templates are located."
-      }
-    },
     "accAOSServiceAccountName": {
       "type": "string",
       "metadata": {
@@ -80,25 +74,17 @@
         "description": "Password of SQL Service Account."
       }
     },
-    "aosDnsNameForPublicIPPrefix": {
-      "type": "string",
-      "minLength": 1,
-      "metadata": {
-        "description": "Globally unique DNS Name for the Public IP used to access the AOS Virtual Machine."
-      }
-    },
-    "aosInstanceNamePrefix": {
+    "AOSInstanceNamePrefix": {
       "type": "string",
       "defaultValue": "MicrosoftDynamicsAx",
       "metadata": {
         "description": "Specifies the Microsoft Dynamics AX AOS instance name"
       }
     },
-    "aosLBDnsNameForPublicIP": {
+    "AOSLBDnsNameForPublicIP": {
       "type": "string",
-      "minLength": 1,
       "metadata": {
-        "description": "Globally unique DNS Name for the Public IP used to access the AOS Load Balancer."
+        "description": "Globally unique DNS Name for the Public IP used to access the AOS load balancer."
       }
     },
     "AOSNumberOfInstances": {
@@ -108,35 +94,30 @@
       },
       "defaultValue": "2"
     },
+    "AOSVMDSCModuleUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The URL of the AOS VM DSC module."
+      }
+    },
+    "AOSVMMachine0DSCConfigurationFunction": {
+      "type": "string",
+      "metadata": {
+        "description": "The configuration function of the AOS VM Machine 0 DSC."
+      }
+    },
+    "AOSVMMachine1NDSCConfigurationFunction": {
+      "type": "string",
+      "metadata": {
+        "description": "The configuration function of the AOS VM Machine 1 DSC."
+      }
+    },
     "AOSVMNamePrefix": {
       "type": "string",
       "metadata": {
-        "description": "AOS VM name prefix."
-      }
-    },
-    "AOSVMSize": {
-      "type": "string",
-      "metadata": {
-        "description": "The VM size for the AOS Virtual Machine."
+        "description": "The VM name for the AOS Virtual Machine."
       },
-      "allowedValues": [
-        "Standard_D1",
-        "Standard_DS1",
-        "Standard_D2",
-        "Standard_DS2",
-        "Standard_D3",
-        "Standard_DS3",
-        "Standard_D4",
-        "Standard_DS4",
-        "Standard_D11",
-        "Standard_DS11",
-        "Standard_D12",
-        "Standard_DS12",
-        "Standard_D13",
-        "Standard_DS13",
-        "Standard_D14",
-        "Standard_DS14"
-      ]
+      "defaultValue": "AOSVM"
     },
     "AOSWsdlPort": {
       "type": "string",
@@ -145,24 +126,10 @@
         "description": "Specifies the Microsoft Dynamics AX AOS WSDL Port"
       }
     },
-    "ApplicationSubnetName": {
+    "apiVersion": {
       "type": "string",
       "metadata": {
-        "description": "The virtual network application subnet name."
-      }
-    },
-    "biDnsNameForPublicIPPrefix": {
-      "type": "string",
-      "minLength": 1,
-      "metadata": {
-        "description": "Globally unique DNS Name for the Public IP used to access the RDS Virtual Machine."
-      }
-    },
-    "biLBDnsNameForPublicIP": {
-      "type": "string",
-      "minLength": 1,
-      "metadata": {
-        "description": "Globally unique DNS Name for the Public IP used to access the RDS load balancer."
+        "description": "The ARM Template API Version"
       }
     },
     "BINumberOfInstances": {
@@ -172,41 +139,24 @@
       },
       "defaultValue": "2"
     },
+    "BIVMDSCConfigurationFunction": {
+      "type": "string",
+      "metadata": {
+        "description": "The configuration function of the BI VM DSC."
+      }
+    },
+    "BIVMDSCModuleUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The URL of the BI VM DSC module."
+      }
+    },
     "BIVMNamePrefix": {
       "type": "string",
       "metadata": {
-        "description": "BI VM name prefix."
-      }
-    },
-    "BIVMSize": {
-      "type": "string",
-      "metadata": {
-        "description": "The VM size for the BI Virtual Machine."
+        "description": "The VM name for the BI Virtual Machine."
       },
-      "allowedValues": [
-        "Standard_D1",
-        "Standard_DS1",
-        "Standard_D2",
-        "Standard_DS2",
-        "Standard_D3",
-        "Standard_DS3",
-        "Standard_D4",
-        "Standard_DS4",
-        "Standard_D11",
-        "Standard_DS11",
-        "Standard_D12",
-        "Standard_DS12",
-        "Standard_D13",
-        "Standard_DS13",
-        "Standard_D14",
-        "Standard_DS14"
-      ]
-    },
-    "ClientDnsNameForPublicIPPrefix": {
-      "type": "string",
-      "metadata": {
-        "description": "Globally unique DNS Name for the Public IP used to access the Client Virtual Machine."
-      }
+      "defaultValue": "BIVM"
     },
     "ClientNumberOfInstances": {
       "type": "int",
@@ -215,39 +165,28 @@
       },
       "defaultValue": "2"
     },
+    "ClientVMDSCConfigurationFunction": {
+      "type": "string",
+      "metadata": {
+        "description": "The configuration function of the Client VM Machine DSC."
+      }
+    },
+    "ClientVMDSCModuleUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The URL of the Client VM DSC module."
+      }
+    },
     "ClientVMNamePrefix": {
       "type": "string",
       "metadata": {
-        "description": "Client VM name prefix."
-      }
-    },
-    "ClientVMSize": {
-      "type": "string",
-      "metadata": {
-        "description": "The VM size for the Client Virtual Machine."
+        "description": "The VM name for the Client Virtual Machine."
       },
-      "allowedValues": [
-        "Standard_D1",
-        "Standard_DS1",
-        "Standard_D2",
-        "Standard_DS2",
-        "Standard_D3",
-        "Standard_DS3",
-        "Standard_D4",
-        "Standard_DS4",
-        "Standard_D11",
-        "Standard_DS11",
-        "Standard_D12",
-        "Standard_DS12",
-        "Standard_D13",
-        "Standard_DS13",
-        "Standard_D14",
-        "Standard_DS14"
-      ]
+      "defaultValue": "ClientVM"
     },
     "cumulativeUpdatesAndHotFixes": {
       "type": "array",
-      "defaultValue": [],
+      "defaultValue": [ ],
       "metadata": {
         "description": "Specifies the cumulative updates and hot fixes files for a slipstream installation"
       }
@@ -259,54 +198,30 @@
         "description": "Specifies the Microsoft Dynamics AX database instance name"
       }
     },
-    "DiagnosticsStorageType": {
-      "type": "string",
-      "metadata": {
-        "description": "Azure Diagnostics Storage type."
-      }
-    },
     "domainToJoin": {
       "type": "string",
       "metadata": {
         "description": "The FQDN of the AD domain"
       }
     },
-    "epDnsNameForPublicIP": {
+    "EPVMDSCConfigurationFunction": {
       "type": "string",
-      "minLength": 1,
       "metadata": {
-        "description": "Globally unique DNS Name for the Public IP used to access the EP Virtual Machine."
+        "description": "The configuration function of the EP VM DSC."
+      }
+    },
+    "EPVMDSCModuleUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The URL of the EP VM DSC module."
       }
     },
     "EPVMName": {
       "type": "string",
       "metadata": {
-        "description": "EP VM name."
-      }
-    },
-    "EPVMSize": {
-      "type": "string",
-      "metadata": {
-        "description": "The VM size for the EP Virtual Machine."
+        "description": "The VM name for the EP Virtual Machine."
       },
-      "allowedValues": [
-        "Standard_D1",
-        "Standard_DS1",
-        "Standard_D2",
-        "Standard_DS2",
-        "Standard_D3",
-        "Standard_DS3",
-        "Standard_D4",
-        "Standard_DS4",
-        "Standard_D11",
-        "Standard_DS11",
-        "Standard_D12",
-        "Standard_DS12",
-        "Standard_D13",
-        "Standard_DS13",
-        "Standard_D14",
-        "Standard_DS14"
-      ]
+      "defaultValue": "EPVM"
     },
     "FileAxLicenseUri": {
       "type": "string",
@@ -314,10 +229,10 @@
         "description": "The Dynamics AX license file."
       }
     },
-    "FileAxSetupPath": {
+    "FileAxSetupUri": {
       "type": "string",
       "metadata": {
-        "description": "The Dynamics AX setup executable path."
+        "description": "The Dynamics AX setup file."
       }
     },
     "FileAxSetupUpdatesPath": {
@@ -326,10 +241,16 @@
         "description": "The Dynamics AX setup updates path."
       }
     },
-    "FileAxSetupUri": {
+    "FileAxSetupPath": {
       "type": "string",
       "metadata": {
-        "description": "The Dynamics AX setup file."
+        "description": "The Dynamics AX setup executable path."
+      }
+    },
+    "FileSqlADOMDSetupUri": {
+      "type": "string",
+      "metadata": {
+        "description": "The SQL Server ADOMD.NET setup file location."
       }
     },
     "FileMSChartSetupUri": {
@@ -348,12 +269,6 @@
       "type": "string",
       "metadata": {
         "description": "The Sharepoint update setup file location."
-      }
-    },
-    "FileSqlADOMDSetupUri": {
-      "type": "string",
-      "metadata": {
-        "description": "The SQL Server ADOMD.NET setup file location."
       }
     },
     "FileSqlAMOSetupUri": {
@@ -386,22 +301,21 @@
         "description": "The digital certificate password for RDS roles."
       }
     },
-    "RDSDnsNameForPublicIPPrefix": {
+    "RDSGatewayVMName": {
       "type": "string",
-      "minLength": 1,
       "metadata": {
-        "description": "Globally unique DNS Name for the Public IP used to access the RDS Virtual Machine."
-      }
+        "description": "The VM name for the RDS Gateway Virtual Machine."
+      },
+      "defaultValue": "RDSGatewayVM"
     },
     "RDSFarmName": {
       "type": "string",
       "metadata": {
-        "description": "The RDS farm name."
+        "description": "The RDSH farmname."
       }
     },
-    "rdsLBDnsNameForPublicIP": {
+    "RDSLBDnsNameForPublicIP": {
       "type": "string",
-      "minLength": 1,
       "metadata": {
         "description": "Globally unique DNS Name for the Public IP used to access the RDS Load Balancer."
       }
@@ -425,35 +339,30 @@
         "description": "The start value of RDS static private IP."
       }
     },
+    "RDSVMMachine0DSCConfigurationFunction": {
+      "type": "string",
+      "metadata": {
+        "description": "The configuration function of the RDS VM Machine 0 DSC."
+      }
+    },
+    "RDSVMMachine1NDSCConfigurationFunction": {
+      "type": "string",
+      "metadata": {
+        "description": "The configuration function of the RDS VM Machine 1 DSC."
+      }
+    },
+    "RDSVMDSCModuleUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The URL of the RDS VM DSC module."
+      }
+    },
     "RDSVMNamePrefix": {
       "type": "string",
       "metadata": {
-        "description": "RDS VM name."
-      }
-    },
-    "RDSVMSize": {
-      "type": "string",
-      "metadata": {
-        "description": "The VM size for the RDS Virtual Machine."
+        "description": "The VM name for the RDS Virtual Machine."
       },
-      "allowedValues": [
-        "Standard_D1",
-        "Standard_DS1",
-        "Standard_D2",
-        "Standard_DS2",
-        "Standard_D3",
-        "Standard_DS3",
-        "Standard_D4",
-        "Standard_DS4",
-        "Standard_D11",
-        "Standard_DS11",
-        "Standard_D12",
-        "Standard_DS12",
-        "Standard_D13",
-        "Standard_DS13",
-        "Standard_D14",
-        "Standard_DS14"
-      ]
+      "defaultValue": "RDSVM"
     },
     "spFarmPassphrase": {
       "type": "string",
@@ -464,485 +373,114 @@
     "SQLAlwaysOnAvailabilityGroupListenerName": {
       "type": "string",
       "metadata": {
-        "description": "SQL Server AlwaysOn availability group listener name."
+        "description": "The availability group listener name for the SQL Server AlwaysOn."
       }
     },
     "SQLAlwaysOnAvailabilityGroupName": {
       "type": "string",
       "metadata": {
-        "description": "SQL Server AlwaysOn availability group name."
+        "description": "The availability group name for the SQL Server AlwaysOn."
       }
     },
     "SQLAlwaysOnClusterName": {
       "type": "string",
       "metadata": {
-        "description": "SQL Server AlwaysOn cluster name."
+        "description": "The cluster name for the SQL Server AlwaysOn."
       }
     },
     "SQLAlwaysOnEndpointName": {
       "type": "string",
       "metadata": {
-        "description": "SQL Server AlwaysOn endpoint name."
-      }
-    },
-    "sqlDnsNameForPublicIPPrefix": {
-      "type": "string",
-      "minLength": 1,
-      "metadata": {
-        "description": "Globally unique DNS Name for the Public IP used to access the SQL Server Virtual Machine."
+        "description": "The endpoint name for the SQL Server AlwaysOn."
       }
     },
     "SQLLoadBalancerPrivateIPAddress": {
       "type": "string",
       "metadata": {
-        "description": "The sql server load balancer private ip address."
+        "description": "The SQL load balancer private IP address."
       }
     },
-    "SQLServerSubnetName": {
+    "SQLVMCreateClusterDSCConfigurationFunction": {
       "type": "string",
       "metadata": {
-        "description": "The virtual network SQL Server subnet name."
+        "description": "The configuration function of the SQL VM Create Cluster DSC."
       }
     },
-    "SQLVMDataDiskSize": {
-      "type": "int",
+    "SQLVMDSCModuleUrl": {
+      "type": "string",
       "metadata": {
-        "description": "The SQL Server Virtual Machine Data disk size."
-      },
-      "defaultValue": 1023
+        "description": "The URL of the SQL VM DSC module."
+      }
     },
     "SQLVMNamePrefix": {
       "type": "string",
       "metadata": {
-        "description": "SQL VM name prefix."
-      }
-    },
-    "SQLVMNumberOfDataDisk": {
-      "type": "string",
-      "allowedValues": [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "32"
-      ],
-      "metadata": {
-        "description": "The SQL Server Virtual Machine number of data disk."
-      }
-    },
-    "SQLVMSize": {
-      "type": "string",
-      "metadata": {
-        "description": "The VM size for the SQL Virtual Machine."
+        "description": "The VM name for the SQL Server Virtual Machine."
       },
-      "allowedValues": [
-        "Standard_D1",
-        "Standard_DS1",
-        "Standard_D2",
-        "Standard_DS2",
-        "Standard_D3",
-        "Standard_DS3",
-        "Standard_D4",
-        "Standard_DS4",
-        "Standard_D11",
-        "Standard_DS11",
-        "Standard_D12",
-        "Standard_DS12",
-        "Standard_D13",
-        "Standard_DS13",
-        "Standard_D14",
-        "Standard_DS14"
-      ]
+      "defaultValue": "SQLVM"
     },
-    "sqlWitDnsNameForPublicIP": {
+    "SQLVMPrepareDSCConfigurationFunction": {
       "type": "string",
-      "minLength": 1,
       "metadata": {
-        "description": "Globally unique DNS Name for the Public IP used to access the SQL Server Witness Virtual Machine."
+        "description": "The configuration function of the SQL VM Prepare DSC."
+      }
+    },
+    "SQLWitnessSharePath": {
+      "type": "string",
+      "metadata": {
+        "description": "The share path name for the SQL Server Witness."
+      }
+    },
+    "SQLWitnessVMDSCConfigurationFunction": {
+      "type": "string",
+      "metadata": {
+        "description": "The configuration function of the SQL Witness VM DSC."
+      }
+    },
+    "SQLWitnessVMDSCModuleUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The URL of the SQL Witness VM DSC module."
       }
     },
     "SQLWitnessVMName": {
       "type": "string",
       "metadata": {
-        "description": "SQL Witness VM name."
-      }
-    },
-    "SQLWitnessVMSize": {
-      "type": "string",
-      "metadata": {
-        "description": "The VM size for the SQL Virtual Machine."
+        "description": "The VM name for the SQL Server Witness Virtual Machine."
       },
-      "allowedValues": [
-        "Standard_D1",
-        "Standard_DS1",
-        "Standard_D2",
-        "Standard_DS2",
-        "Standard_D3",
-        "Standard_DS3",
-        "Standard_D4",
-        "Standard_DS4",
-        "Standard_D11",
-        "Standard_DS11",
-        "Standard_D12",
-        "Standard_DS12",
-        "Standard_D13",
-        "Standard_DS13",
-        "Standard_D14",
-        "Standard_DS14"
-      ]
-    },
-    "StorageType": {
-      "type": "string",
-      "metadata": {
-        "description": "Azure Storage type."
-      }
-    },
-    "VirtualNetworkName": {
-      "type": "string",
-      "metadata": {
-        "description": "Virtual Network Name."
-      }
-    },
-    "VirtualNetworkResourceGroup": {
-      "type": "string",
-      "metadata": {
-        "description": "Virtual Network Resource Group."
-      }
+      "defaultValue": "SQLWITVM"
     }
   },
   "variables": {
-    // Common variables
-    "ApplicationSubnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('ApplicationSubnetName'))]",
-    "assetLocation": "[parameters('assetLocation')]",
-    "deploymentApiVersion": "2016-06-01",
-    "DiagnosticsStorageName": "[concat('diagstorage', uniqueString(resourceGroup().id))]",
-    "DSCModuleLocation": "[parameters('assetLocation')]",
-    "publicIPAddressType": "Dynamic",
-    "resourcesApiVersion": "2015-06-15",
-    "SQLServerSubnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('SQLServerSubnetName'))]",
-    "StorageName": "[concat('storage', uniqueString(resourceGroup().id))]",
-    "vhdStorageContainerName": "vhds",
-    "vnetId": "[resourceId(parameters('VirtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('VirtualNetworkName'))]",
 
-    // AOS variables
-    "AOSTemplateURL": "[concat(variables('assetLocation'), '/AOSTemplate.json')]",
-    "AOSVMDSCModuleUrl": "[concat(variables('DSCModuleLocation'), '/AOSConfiguration.ps1.zip')]",
-    "AOSVMMachine0DSCConfigurationFunction": "AOSConfiguration.ps1\\AOSMachine0",
-    "AOSVMMachine1NDSCConfigurationFunction": "AOSConfiguration.ps1\\AOSMachine1N",
-
-    // BI variables
-    "BITemplateURL": "[concat(variables('assetLocation'), '/BITemplate.json')]",
-    "BIVMDSCConfigurationFunction": "BIConfiguration.ps1\\BIMachine",
-    "BIVMDSCModuleUrl": "[concat(variables('DSCModuleLocation'), '/BIConfiguration.ps1.zip')]",
-
-    // Client variables
-    "ClientTemplateURL": "[concat(variables('assetLocation'), '/ClientTemplate.json')]",
-    "ClientVMDSCConfigurationFunction": "ClientConfiguration.ps1\\ClientMachine",
-    "ClientVMDSCModuleUrl": "[concat(variables('DSCModuleLocation'), '/ClientConfiguration.ps1.zip')]",
-
-    // DSC variables
-    "DSCTemplateURL": "[concat(variables('assetLocation'), '/DSCTemplate.json')]",
-
-    // Disk selection variables
-    "DiskSelectionTemplateURL": "[concat(variables('assetLocation'), '/DiskSelectionTemplate.json')]",
-
-    // EP variables
-    "EPTemplateURL": "[concat(variables('assetLocation'), '/EPTemplate.json')]",
-    "EPVMDataDiskSize": "128",
-    "EPVMDSCConfigurationFunction": "EPConfiguration.ps1\\EPMachine",
-    "EPVMDSCModuleUrl": "[concat(variables('DSCModuleLocation'), '/EPConfiguration.ps1.zip')]",
-
-    // RDS variables
-    "RDSTemplateURL": "[concat(variables('assetLocation'), '/RDSTemplate.json')]",
-    "RDSVMDSCModuleUrl": "[concat(variables('DSCModuleLocation'), '/RDSConfiguration.ps1.zip')]",
-    "RDSVMMachine0DSCConfigurationFunction": "RDSConfiguration.ps1\\RDSMachine0",
-    "RDSVMMachine1NDSCConfigurationFunction": "RDSConfiguration.ps1\\RDSMachine1N",
-
-    // SQL AlwaysOn variables
-    "SQLAlwaysOnTemplateURL": "[concat(variables('assetLocation'), '/SQLAlwaysOnTemplate.json')]",
-    "SQLVMCreateClusterDSCConfigurationFunction": "DatabaseConfiguration.ps1\\SQLAlwaysOnCreateCluster",
-    "SQLVMDSCModuleUrl": "[concat(variables('DSCModuleLocation'), '/DatabaseConfiguration.ps1.zip')]",
-    "SQLVMPrepareDSCConfigurationFunction": "DatabaseConfiguration.ps1\\SQLAlwaysOnPrepare",
-
-    // SQL Witness variables
-    "SQLWitnessSharePath": "sqlwitshare",
-    "SQLWitnessTemplateURL": "[concat(variables('assetLocation'), '/SQLWitnessTemplate.json')]",
-    "SQLWitnessVMDataDiskSize": "128",
-    "SQLWitnessVMDSCConfigurationFunction": "DatabaseConfiguration.ps1\\SQLWitnessMachine",
-    "SQLWitnessVMDSCModuleUrl": "[concat(variables('DSCModuleLocation'), '/DatabaseConfiguration.ps1.zip')]",
-
-    //SQL Load Balancer
     "SQLLoadBalancerName": "SQLLoadBalancer"
+
   },
   "resources": [
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('StorageName')]",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "StorageAccount"
-      },
-      "properties": {
-        "accountType": "[parameters('StorageType')]"
-      }
-    },
-    {
-      "apiVersion": "[variables('resourcesApiVersion')]",
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('DiagnosticsStorageName')]",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "DiagnosticsStorageAccount"
-      },
-      "properties": {
-        "accountType": "[parameters('DiagnosticsStorageType')]"
-      }
-    },
-    {
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "type": "Microsoft.Resources/deployments",
-      "name": "SQLWitnessDeployment",
-      "dependsOn": [ "[variables('StorageName')]", "[variables('DiagnosticsStorageName')]" ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('SQLWitnessTemplateURL')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "adminPassword": { "value": "[parameters('accLocalAdminAccountPassword')]" },
-          "adminUsername": { "value": "[parameters('accLocalAdminAccountName')]" },
-          "apiVersion": { "value": "[variables('resourcesApiVersion')]" },
-          "diagnosticsStorageName": { "value": "[variables('DiagnosticsStorageName')]" },
-          "publicIPAddressType": { "value": "[variables('publicIPAddressType')]" },
-          "SQLWitnessDnsNameForPublicIP": { "value": "[parameters('SQLWitDnsNameForPublicIP')]" },
-          "SQLWitnessSharePath": { "value": "[variables('SQLWitnessSharePath')]" },
-          "SQLWitnessVMDataDiskSize": { "value": "[variables('SQLWitnessVMDataDiskSize')]" },
-          "SQLWitnessVMName": { "value": "[parameters('SQLWitnessVMName')]" },
-          "SQLWitnessVMSize": { "value": "[parameters('SQLWitnessVMSize')]" },
-          "StorageName": { "value": "[variables('StorageName')]" },
-          "subnetRef": { "value": "[variables('SQLServerSubnetRef')]" },
-          "vhdStorageContainerName": { "value": "[variables('vhdStorageContainerName')]" }
-        }
-      }
-    },
-    {
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "type": "Microsoft.Resources/deployments",
-      "name": "SQLAlwaysOnDeployment",
-      "dependsOn": [ "[variables('StorageName')]", "[variables('DiagnosticsStorageName')]" ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('SQLAlwaysOnTemplateURL')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "adminPassword": { "value": "[parameters('accLocalAdminAccountPassword')]" },
-          "adminUsername": { "value": "[parameters('accLocalAdminAccountName')]" },
-          "apiVersion": { "value": "[variables('resourcesApiVersion')]" },
-          "deploymentApiVersion": { "value": "[variables('deploymentApiVersion')]" },
-          "diagnosticsStorageName": { "value": "[variables('DiagnosticsStorageName')]" },
-          "DiskSelectionTemplateURL": { "value": "[variables('DiskSelectionTemplateURL')]" },
-          "publicIPAddressType": { "value": "[variables('publicIPAddressType')]" },
-          "SQLDnsNameForPublicIPPrefix": { "value": "[parameters('SQLDnsNameForPublicIPPrefix')]" },
-          "SQLLoadBalancerPrivateIPAddress": { "value": "[parameters('SQLLoadBalancerPrivateIPAddress')]" },
-          "SQLVMDataDiskSize": { "value": "[parameters('SQLVMDataDiskSize')]" },
-          "SQLVMNamePrefix": { "value": "[parameters('SQLVMNamePrefix')]" },
-          "SQLVMNumberOfDataDisk": { "value": "[parameters('SQLVMNumberOfDataDisk')]" },
-          "SQLVMSize": { "value": "[parameters('SQLVMSize')]" },
-          "StorageName": { "value": "[variables('StorageName')]" },
-          "subnetRef": { "value": "[variables('SQLServerSubnetRef')]" },
-          "vhdStorageContainerName": { "value": "[variables('vhdStorageContainerName')]" }
-        }
-      }
-    },
-    {
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "type": "Microsoft.Resources/deployments",
-      "name": "AOSDeployment",
-      "dependsOn": [ "[variables('StorageName')]", "[variables('DiagnosticsStorageName')]" ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('AOSTemplateURL')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "adminPassword": { "value": "[parameters('accLocalAdminAccountPassword')]" },
-          "adminUsername": { "value": "[parameters('accLocalAdminAccountName')]" },
-          "AOSDnsNameForPublicIPPrefix": { "value": "[parameters('AOSDnsNameForPublicIPPrefix')]" },
-          "AOSLBDnsNameForPublicIP": { "value": "[parameters('AOSLBDnsNameForPublicIP')]" },
-          "AOSNumberOfInstances": { "value": "[parameters('AOSnumberOfInstances')]" },
-          "AOSVMNamePrefix": { "value": "[parameters('AOSVMNamePrefix')]" },
-          "AOSVMSize": { "value": "[parameters('AOSVMSize')]" },
-          "AOSWsdlPort": { "value": "[parameters('AOSWsdlPort')]" },
-          "apiVersion": { "value": "[variables('resourcesApiVersion')]" },
-          "diagnosticsStorageName": { "value": "[variables('DiagnosticsStorageName')]" },
-          "publicIPAddressType": { "value": "[variables('publicIPAddressType')]" },
-          "StorageName": { "value": "[variables('StorageName')]" },
-          "subnetRef": { "value": "[variables('ApplicationSubnetRef')]" },
-          "vhdStorageContainerName": { "value": "[variables('vhdStorageContainerName')]" }
-        }
-      }
-    },
-    {
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "type": "Microsoft.Resources/deployments",
-      "name": "ClientDeployment",
-      "dependsOn": [ "[variables('StorageName')]", "[variables('DiagnosticsStorageName')]" ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('ClientTemplateURL')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "adminPassword": { "value": "[parameters('accLocalAdminAccountPassword')]" },
-          "adminUsername": { "value": "[parameters('accLocalAdminAccountName')]" },
-          "apiVersion": { "value": "[variables('resourcesApiVersion')]" },
-          "ClientDnsNameForPublicIPPrefix": { "value": "[parameters('ClientDnsNameForPublicIPPrefix')]" },
-          "ClientNumberOfInstances": { "value": "[parameters('ClientNumberOfInstances')]" },
-          "ClientVMNamePrefix": { "value": "[parameters('ClientVMNamePrefix')]" },
-          "ClientVMSize": { "value": "[parameters('ClientVMSize')]" },
-          "diagnosticsStorageName": { "value": "[variables('DiagnosticsStorageName')]" },
-          "publicIPAddressType": { "value": "[variables('publicIPAddressType')]" },
-          "StorageName": { "value": "[variables('StorageName')]" },
-          "subnetRef": { "value": "[variables('ApplicationSubnetRef')]" },
-          "vhdStorageContainerName": { "value": "[variables('vhdStorageContainerName')]" }
-        }
-      }
-    },
-    {
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "type": "Microsoft.Resources/deployments",
-      "name": "RDSDeployment",
-      "dependsOn": [ "[variables('StorageName')]", "[variables('DiagnosticsStorageName')]" ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('RDSTemplateURL')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "adminPassword": { "value": "[parameters('accLocalAdminAccountPassword')]" },
-          "adminUsername": { "value": "[parameters('accLocalAdminAccountName')]" },
-          "apiVersion": { "value": "[variables('resourcesApiVersion')]" },
-          "diagnosticsStorageName": { "value": "[variables('DiagnosticsStorageName')]" },
-          "publicIPAddressType": { "value": "[variables('publicIPAddressType')]" },
-          "RDSDnsNameForPublicIPPrefix": { "value": "[parameters('RDSDnsNameForPublicIPPrefix')]" },
-          "RDSLBDnsNameForPublicIP": { "value": "[parameters('RDSLBDnsNameForPublicIP')]" },
-          "RDSNumberOfInstances": { "value": "[parameters('RDSNumberOfInstances')]" },
-          "RDSStaticPrivateIpPrefix": { "value": "[parameters('RDSStaticPrivateIpPrefix')]" },
-          "RDSStaticPrivateIpValue": { "value": "[parameters('RDSStaticPrivateIpValue')]" },
-          "RDSVMNamePrefix": { "value": "[parameters('RDSVMNamePrefix')]" },
-          "RDSVMSize": { "value": "[parameters('RDSVMSize')]" },
-          "StorageName": { "value": "[variables('StorageName')]" },
-          "subnetRef": { "value": "[variables('ApplicationSubnetRef')]" },
-          "vhdStorageContainerName": { "value": "[variables('vhdStorageContainerName')]" }
-        }
-      }
-    },
-    {
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "type": "Microsoft.Resources/deployments",
-      "name": "BIDeployment",
-      "dependsOn": [ "[variables('StorageName')]", "[variables('DiagnosticsStorageName')]" ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('BITemplateURL')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "adminPassword": { "value": "[parameters('accLocalAdminAccountPassword')]" },
-          "adminUsername": { "value": "[parameters('accLocalAdminAccountName')]" },
-          "apiVersion": { "value": "[variables('resourcesApiVersion')]" },
-          "BIDnsNameForPublicIPPrefix": { "value": "[parameters('BIDnsNameForPublicIPPrefix')]" },
-          "BILBDnsNameForPublicIP": { "value": "[parameters('BILBDnsNameForPublicIP')]" },
-          "BINumberOfInstances": { "value": "[parameters('BINumberOfInstances')]" },
-          "BIVMNamePrefix": { "value": "[parameters('BIVMNamePrefix')]" },
-          "BIVMSize": { "value": "[parameters('BIVMSize')]" },
-          "diagnosticsStorageName": { "value": "[variables('DiagnosticsStorageName')]" },
-          "publicIPAddressType": { "value": "[variables('publicIPAddressType')]" },
-          "StorageName": { "value": "[variables('StorageName')]" },
-          "subnetRef": { "value": "[variables('ApplicationSubnetRef')]" },
-          "vhdStorageContainerName": { "value": "[variables('vhdStorageContainerName')]" }
-        }
-      }
-    },
-    {
-      "apiVersion": "[variables('deploymentApiVersion')]",
-      "type": "Microsoft.Resources/deployments",
-      "name": "EPDeployment",
-      "dependsOn": [ "[variables('StorageName')]", "[variables('DiagnosticsStorageName')]" ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('EPTemplateURL')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "adminPassword": { "value": "[parameters('accLocalAdminAccountPassword')]" },
-          "adminUsername": { "value": "[parameters('accLocalAdminAccountName')]" },
-          "apiVersion": { "value": "[variables('resourcesApiVersion')]" },
-          "diagnosticsStorageName": { "value": "[variables('DiagnosticsStorageName')]" },
-          "EPDnsNameForPublicIP": { "value": "[parameters('EPDnsNameForPublicIP')]" },
-          "EPVMDataDiskSize": { "value": "[variables('EPVMDataDiskSize')]" },
-          "EPVMName": { "value": "[parameters('EPVMName')]" },
-          "EPVMSize": { "value": "[parameters('EPVMSize')]" },
-          "publicIPAddressType": { "value": "[variables('publicIPAddressType')]" },
-          "StorageName": { "value": "[variables('StorageName')]" },
-          "subnetRef": { "value": "[variables('ApplicationSubnetRef')]" },
-          "vhdStorageContainerName": { "value": "[variables('vhdStorageContainerName')]" }
-        }
-      }
-    },
-    {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('SQLWitnessVMName'), '/dsc')]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "SQLWitnessDSC"
       },
-      "dependsOn": [
-        "SQLWitnessDeployment",
-        "SQLAlwaysOnDeployment",
-        "AOSDeployment",
-        "ClientDeployment",
-        "RDSDeployment",
-        "BIDeployment",
-        "EPDeployment"
-      ],
+      "dependsOn": [ ],
       "properties": {
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('SQLWitnessVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('SQLWitnessVMDSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('SQLWitnessVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('SQLWitnessVMDSCConfigurationFunction')]",
           "Properties": {
             "DomainName": "[parameters('domainToJoin')]",
             "DynamicsInstallationCreds": {
               "UserName": "[parameters('accDynamicsInstallationAccountName')]",
               "Password": "PrivateSettingsRef:AccDynamicsInstallationAccountPassword"
             },
-            "SharePath": "[variables('SQLWitnessSharePath')]"
+            "SharePath": "[parameters('SQLWitnessSharePath')]"
           }
         },
         "protectedSettings": {
@@ -953,30 +491,22 @@
       }
     },
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('SQLVMNamePrefix'), 0, '/dsc')]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "SQLDSC0"
       },
-      "dependsOn": [
-        "SQLWitnessDeployment",
-        "SQLAlwaysOnDeployment",
-        "AOSDeployment",
-        "ClientDeployment",
-        "RDSDeployment",
-        "BIDeployment",
-        "EPDeployment"
-      ],
+      "dependsOn": [ ],
       "properties": {
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('SQLVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('SQLVMPrepareDSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('SQLVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('SQLVMPrepareDSCConfigurationFunction')]",
           "Properties": {
             "DomainName": "[parameters('domainToJoin')]",
             "DynamicsInstallationCreds": {
@@ -1004,7 +534,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('SQLVMNamePrefix'), 1, '/dsc')]",
       "location": "[resourceGroup().location]",
@@ -1020,8 +550,8 @@
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('SQLVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('SQLVMCreateClusterDSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('SQLVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('SQLVMCreateClusterDSCConfigurationFunction')]",
           "Properties": {
             "ClusterName": "[parameters('SQLAlwaysOnClusterName')]",
             "cumulativeUpdatesAndHotFixes": "[parameters('cumulativeUpdatesAndHotFixes')]",
@@ -1043,7 +573,7 @@
             "Nodes": [ "[concat(parameters('SQLVMNamePrefix'),'0')]", "[concat(parameters('SQLVMNamePrefix'),'1')]" ],
             "PrimaryReplica": "[concat(parameters('SQLVMNamePrefix'),'1')]",
             "SecondaryReplica": "[concat(parameters('SQLVMNamePrefix'),'0')]",
-            "SharePath": "[concat('\\\\', parameters('SQLWitnessVMName'), '\\', variables('SQLWitnessSharePath'))]",
+            "SharePath": "[concat('\\\\', parameters('SQLWitnessVMName'), '\\', parameters('SQLWitnessSharePath'))]",
             "SqlAlwaysOnAvailabilityGroupListenerName": "[parameters('SQLAlwaysOnAvailabilityGroupListenerName')]",
             "SqlAlwaysOnAvailabilityGroupName": "[parameters('SQLAlwaysOnAvailabilityGroupName')]",
             "SqlAlwaysOnEndpointName": "[parameters('SQLAlwaysOnEndpointName')]",
@@ -1063,7 +593,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('AOSVMNamePrefix'), 0, '/dsc')]",
       "location": "[resourceGroup().location]",
@@ -1079,8 +609,8 @@
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('AOSVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('AOSVMMachine0DSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('AOSVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('AOSVMMachine0DSCConfigurationFunction')]",
           "Properties": {
             "aosAccount": "[parameters('accAOSServiceAccountName')]",
             "aosAccountPassword": "[parameters('accAOSServiceAccountPassword')]",
@@ -1113,7 +643,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('AOSVMNamePrefix'), add(copyindex(), 1), '/dsc')]",
       "location": "[resourceGroup().location]",
@@ -1133,8 +663,8 @@
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('AOSVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('AOSVMMachine1NDSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('AOSVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('AOSVMMachine1NDSCConfigurationFunction')]",
           "Properties": {
             "aosAccount": "[parameters('accAOSServiceAccountName')]",
             "aosAccountPassword": "[parameters('accAOSServiceAccountPassword')]",
@@ -1164,7 +694,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('BIVMNamePrefix'), '0', '/dsc')]",
       "location": "[resourceGroup().location]",
@@ -1180,8 +710,8 @@
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('BIVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('BIVMDSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('BIVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('BIVMDSCConfigurationFunction')]",
           "Properties": {
             "aosServer": "[concat(parameters('AOSVMNamePrefix'), '0')]",
             "aosWsdlPort": "[parameters('aosWsdlPort')]",
@@ -1209,7 +739,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('BIVMNamePrefix'), add(copyindex(), 1), '/dsc')]",
       "location": "[resourceGroup().location]",
@@ -1230,8 +760,8 @@
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('BIVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('BIVMDSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('BIVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('BIVMDSCConfigurationFunction')]",
           "Properties": {
             "aosServer": "[concat(parameters('AOSVMNamePrefix'), add(copyindex(), 1))]",
             "aosWsdlPort": "[parameters('aosWsdlPort')]",
@@ -1259,7 +789,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('ClientVMNamePrefix'), copyindex(), '/dsc')]",
       "location": "[resourceGroup().location]",
@@ -1270,17 +800,15 @@
         "name": "clientDSCLoop",
         "count": "[parameters('ClientNumberOfInstances')]"
       },
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(parameters('AOSVMNamePrefix'), 0), 'dsc')]"
-      ],
+      "dependsOn": [ ],
       "properties": {
         "publisher": "Microsoft.Powershell",
         "type": "DSC",
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('ClientVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('ClientVMDSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('ClientVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('ClientVMDSCConfigurationFunction')]",
           "Properties": {
             "aosServer": "[concat(parameters('AOSLBDnsNameForPublicIP'), '.', resourceGroup().location, '.cloudapp.azure.com')]",
             "aosWsdlPort": "[parameters('AOSWsdlPort')]",
@@ -1308,7 +836,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('EPVMName'), '/dsc')]",
       "location": "[resourceGroup().location]",
@@ -1325,8 +853,8 @@
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('EPVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('EPVMDSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('EPVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('EPVMDSCConfigurationFunction')]",
           "Properties": {
             "aosServer": "[concat(parameters('AOSVMNamePrefix'), 0)]",
             "aosWsdlPort": "[parameters('AOSWsdlPort')]",
@@ -1363,7 +891,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('RDSVMNamePrefix'), '0/dsc')]",
       "location": "[resourceGroup().location]",
@@ -1377,8 +905,8 @@
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('RDSVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('RDSVMMachine0DSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('RDSVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('RDSVMMachine0DSCConfigurationFunction')]",
           "Properties": {
             "ClientAccessName": "[concat(parameters('RDSFarmName'), '.', parameters('domainToJoin'))]",
             "ClientNumberOfInstances": "[parameters('ClientNumberOfInstances')]",
@@ -1409,7 +937,7 @@
       }
     },
     {
-      "apiVersion": "[variables('resourcesApiVersion')]",
+      "apiVersion": "[parameters('apiVersion')]",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('RDSVMNamePrefix'), add(copyindex(), 1), '/dsc')]",
       "location": "[resourceGroup().location]",
@@ -1429,8 +957,8 @@
         "typeHandlerVersion": "2.15",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "ModulesUrl": "[variables('RDSVMDSCModuleUrl')]",
-          "ConfigurationFunction": "[variables('RDSVMMachine1NDSCConfigurationFunction')]",
+          "ModulesUrl": "[parameters('RDSVMDSCModuleUrl')]",
+          "ConfigurationFunction": "[parameters('RDSVMMachine1NDSCConfigurationFunction')]",
           "Properties": {
             "ConnectionBrokerVMName": "[concat(parameters('RDSVMNamePrefix'), '0')]",
             "dbSqlServer": "[concat(parameters('SQLVMNamePrefix'), '1')]",
@@ -1457,5 +985,8 @@
         }
       }
     }
-  ]
+
+  ],
+  "outputs": {
+  }
 }
