@@ -1,0 +1,234 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "assetLocation": {
+      "value": "https://github.com/Microsoft/AX2012ARMTemplates/raw/master"
+    },
+    "accAOSServiceAccountName": {
+      "value": "<Your Domain>\\AOSService"
+    },
+    "accAOSServiceAccountPassword": {
+      "value": "<Password>"
+    },
+    "accBusinessConnectorProxyAccountName": {
+      "value": "<Your Domain>\\BCProxy"
+    },
+    "accBusinessConnectorProxyAccountPassword": {
+      "value": "<Password>"
+    },
+    "accDynamicsInstallationAccountName": {
+      "value": "<Your Domain>\\DAXInstall"
+    },
+    "accDynamicsInstallationAccountPassword": {
+      "value": "<Password>"
+    },
+    "accLocalAdminAccountName": {
+      "value": "AX2012LocalAdmin"
+    },
+    "accLocalAdminAccountPassword": {
+      "value": "<Password>"
+    },
+    "accSharepointServiceAccountName": {
+      "value": "<Your Domain>\\SharePointAdmin"
+    },
+    "accSharepointServiceAccountPassword": {
+      "value": "<Password>"
+    },
+    "accSqlServerServiceAccountName": {
+      "value": "<Your Domain>\\AXSQLAdmin"
+    },
+    "accSqlServerServiceAccountPassword": {
+      "value": "<Password>"
+    },
+    "aosDnsNameForPublicIPPrefix": {
+      "value": "aostestdns1"
+    },
+    "aosInstanceNamePrefix": {
+      "value": "aosinstance1"
+    },
+    "aosLBDnsNameForPublicIP": {
+      "value": "aoslb1"
+    },
+    "AOSNumberOfInstances": {
+      "value": 2
+    },
+    "AOSVMNamePrefix": {
+      "value": "aosVM"
+    },
+    "AOSVMSize": {
+      "value": "Standard_DS3"
+    },
+    "aosWsdlPort": {
+      "value": "8101"
+    },
+    "ApplicationSubnetName": {
+      "value": "Subnet1"
+    },
+    "biDnsNameForPublicIPPrefix": {
+      "value": "bidnsax1"
+    },
+    "biLBDnsNameForPublicIP": {
+      "value": "armbilbaxip"
+    },
+    "BINumberOfInstances": {
+      "value": 2
+    },
+    "BIVMNamePrefix": {
+      "value": "BIVM"
+    },
+    "BIVMSize": {
+      "value": "Standard_DS3"
+    },
+    "ClientDnsNameForPublicIPPrefix": {
+      "value": "clientaxip"
+    },
+    "ClientNumberOfInstances": {
+      "value": 2
+    },
+    "ClientVMNamePrefix": {
+      "value": "AXCVM"
+    },
+    "ClientVMSize": {
+      "value": "Standard_DS3"
+    },
+    "cumulativeUpdatesAndHotFixes": {
+      "value": [ "https://arm.blob.core.windows.net/armtest/CU12.zip" ]
+    },
+    "dbSqlServerDatabase": {
+      "value": "MicrosoftDynamicsAx"
+    },
+    "DiagnosticsStorageType": {
+      "value": "Standard_LRS"
+    },
+    "domainToJoin": {
+      "value": "<Your Fully Qualified Domain Name>"
+    },
+    "epDnsNameForPublicIP": {
+      "value": "epaxip1"
+    },
+    "EPVMName": {
+      "value": "EPVM"
+    },
+    "EPVMSize": {
+      "value": "Standard_DS3"
+    },
+    "FileAxLicenseUri": {
+      "value": "https://test.blob.core.windows.net/armtest/demolicensev6.txt"
+    },
+    "FileAxSetupPath": {
+      "value": "6.3.164.0\\setup.exe"
+    },
+    "FileAxSetupUpdatesPath": {
+      "value": "6.3.164.0\\Updates"
+    },
+    "FileAxSetupUri": {
+      "value": "https://test.blob.core.windows.net/armtest/6.3.164.0.zip"
+    },
+    "FileMSChartSetupUri": {
+      "value": "https://test.blob.core.windows.net/armtest/MSChart.exe"
+    },
+    "FileReportViewerSetupUri": {
+      "value": "https://test.blob.core.windows.net/armtest/ReportViewer.msi"
+    },
+    "FileSharePointUpdateSetupUri": {
+      "value": "https://test.blob.core.windows.net/armtest/coreserverloc2013-kb3141477-fullfile-x64-glb.exe"
+    },
+    "FileSqlADOMDSetupUri": {
+      "value": "https://test.blob.core.windows.net/armtest/SQLSERVER2008_ASADOMD10.msi"
+    },
+    "FileSqlAMOSetupUri": {
+      "value": "https://test.blob.core.windows.net/armtest/SQLSERVER2008_ASAMO10.msi"
+    },
+    "FileSqlServerNativeClientSetupUri": {
+      "value": "https://test.blob.core.windows.net/armtest/sqlncli.msi"
+    },
+    "FileSqlSharedManagementObjectsSetupUri": {
+      "value": "https://test.blob.core.windows.net/armtest/SharedManagementObjects.msi"
+    },
+    "FileSqlSysClrTypesSetupUri": {
+      "value": "https://test.blob.core.windows.net/armtest/SQLSysClrTypes.msi"
+    },
+    "RDSCertificatePassword": {
+      "value": "<password>"
+    },
+    "RDSDnsNameForPublicIPPrefix": {
+      "value": "rdsaxip"
+    },
+    "RDSFarmName": {
+      "value": "RDSFARMAX"
+    },
+    "rdsLBDnsNameForPublicIP": {
+      "value": "rdslbaxip"
+    },
+    "RDSNumberOfInstances": {
+      "value": 2
+    },
+    "RDSStaticPrivateIpPrefix": {
+      "value": "10.2.0."
+    },
+    "RDSStaticPrivateIpValue": {
+      "value": 16
+    },
+    "RDSVMNamePrefix": {
+      "value": "RDSVM"
+    },
+    "RDSVMSize": {
+      "value": "Standard_DS3"
+    },
+    "spFarmPassphrase": {
+      "value": "<Password>"
+    },
+    "SQLAlwaysOnAvailabilityGroupListenerName": {
+      "value": "O-LISTENER"
+    },
+    "SQLAlwaysOnAvailabilityGroupName": {
+      "value": "O-AVAILABILITYGROUP"
+    },
+    "SQLAlwaysOnClusterName": {
+      "value": "MySQLCluster"
+    },
+    "SQLAlwaysOnEndpointName": {
+      "value": "O-ENDPOINT"
+    },
+    "sqlDnsNameForPublicIPPrefix": {
+      "value": "sqlaxsgarm"
+    },
+    "SQLLoadBalancerPrivateIPAddress": {
+      "value": "10.2.0.15"
+    },
+    "SQLServerSubnetName": {
+      "value": "Subnet1"
+    },
+    "SQLVMDataDiskSize": {
+      "value": 128
+    },
+    "SQLVMNamePrefix": {
+      "value": "O-SQLVM"
+    },
+    "SQLVMNumberOfDataDisk": {
+      "value": "2"
+    },
+    "SQLVMSize": {
+      "value": "Standard_DS3"
+    },
+    "sqlWitDnsNameForPublicIP": {
+      "value": "sqlwitaxip"
+    },
+    "SQLWitnessVMName": {
+      "value": "O-SQLWITVM"
+    },
+    "SQLWitnessVMSize": {
+      "value": "Standard_DS3"
+    },
+    "StorageType": {
+      "value": "Standard_LRS"
+    },
+    "VirtualNetworkName": {
+      "value": "vnet02"
+    },
+    "VirtualNetworkResourceGroup": {
+      "value": "VNet"
+    }
+  }
+}
