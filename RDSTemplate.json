@@ -1,0 +1,368 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Local admin password for the Virtual Machine."
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Local admin username for the Virtual Machine."
+      }
+    },
+    "apiVersion": {
+      "type": "string",
+      "metadata": {
+        "description": "The ARM Template API Version"
+      }
+    },
+    "diagnosticsStorageName": {
+      "type": "string",
+      "metadata": {
+        "description": "The diagnostics storage name."
+      }
+    },
+    "publicIPAddressType": {
+      "type": "string",
+      "metadata": {
+        "description": "The type of the Public IP address"
+      },
+      "defaultValue": "Dynamic",
+      "allowedValues": [
+        "Dynamic",
+        "Static"
+      ]
+    },
+    "RDSDnsNameForPublicIPPrefix": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "Globally unique DNS Name for the Public IP used to access the RDS Virtual Machine."
+      }
+    },
+    "RDSLBDnsNameForPublicIP": {
+      "type": "string",
+      "metadata": {
+        "description": "Globally unique DNS Name for the Public IP used to access the RDS Load Balancer."
+      }
+    },
+    "RDSNumberOfInstances": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of RDS instances to be deployed."
+      },
+      "defaultValue": "2"
+    },
+    "RDSStaticPrivateIpPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The RDS static private IP prefix (example: 10.2.0.)."
+      }
+    },
+    "RDSStaticPrivateIpValue": {
+      "type": "int",
+      "metadata": {
+        "description": "The start value of RDS static private IP."
+      }
+    },
+    "RDSVMNamePrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The VM name for the RDS Virtual Machine."
+      },
+      "defaultValue": "RDSVM"
+    },
+    "RDSVMSize": {
+      "type": "string",
+      "metadata": {
+        "description": "The VM size for the RDS Virtual Machine."
+      },
+      "allowedValues": [
+        "Standard_D1",
+        "Standard_DS1",
+        "Standard_D2",
+        "Standard_DS2",
+        "Standard_D3",
+        "Standard_DS3",
+        "Standard_D4",
+        "Standard_DS4",
+        "Standard_D11",
+        "Standard_DS11",
+        "Standard_D12",
+        "Standard_DS12",
+        "Standard_D13",
+        "Standard_DS13",
+        "Standard_D14",
+        "Standard_DS14"
+      ]
+    },
+    "StorageName": {
+      "type": "string",
+      "metadata": {
+        "description": "The storage name."
+      }
+    },
+    "subnetRef": {
+      "type": "string",
+      "metadata": {
+        "description": "The reference of the subnet resource for the network interface."
+      }
+    },
+    "vhdStorageContainerName": {
+      "type": "string",
+      "metadata": {
+        "description": "The vhd storage container name."
+      }
+    }
+  },
+  "variables": {
+    "RDSAvailabilitySetName": "RDSAvailabilitySet",
+    "RDSLBpublicIPAddressName": "RDSLBPublicIP",
+    "RDSLoadBalancerName": "RDSLoadBalancer",
+    "RDSNicNamePrefix": "RDSVMNic",
+    "RDSPublicIPAddressNamePrefix": "RDSPublicIP",
+    "RDSVMImageOffer": "WindowsServer",
+    "RDSVMImagePublisher": "MicrosoftWindowsServer",
+    "RDSVMImageSKU": "2016-Datacenter",
+    "RDSVMOSDiskName": "[concat(variables('ResourceGroupUniqueString'), '-', 'rdsos') ]",
+    "ResourceGroupUniqueString": "[uniquestring(resourceGroup().id)]"
+  },
+  "resources": [
+
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('RDSAvailabilitySetName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "RDSAvailabilitySet"
+      },
+      "properties": { }
+    },
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('RDSLBpublicIPAddressName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "RDSLoadBalancePublicIPAddress"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('RDSLBDnsNameForPublicIP')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "name": "[variables('RDSLoadBalancerName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "RDSLoadBalancer"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('RDSLBpublicIPAddressName'))]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "LoadBalancerFrontend",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('RDSLBpublicIPAddressName'))]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "LoadBalancerBackend"
+          }
+        ],
+        "probes": [
+          {
+            "name": "lbprobe",
+            "properties": {
+              "protocol": "Tcp",
+              "port": 443,
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2
+            }
+          },
+          {
+            "name": "lbprobe2",
+            "properties": {
+              "protocol": "Tcp",
+              "port": 3391,
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2
+            }
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "lbrule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('RDSLoadBalancerName')), '/frontendIpConfigurations/LoadBalancerFrontend')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('RDSLoadBalancerName')), '/backendAddressPools/LoadBalancerBackend')]"
+              },
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('RDSLoadBalancerName')), '/probes/lbprobe')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 443,
+              "backendPort": 443,
+              "idleTimeoutInMinutes": 5
+            }
+          },
+          {
+            "name": "lbrule2",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('RDSLoadBalancerName')), '/frontendIpConfigurations/LoadBalancerFrontend')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('RDSLoadBalancerName')), '/backendAddressPools/LoadBalancerBackend')]"
+              },
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('RDSLoadBalancerName')), '/probes/lbprobe2')]"
+              },
+              "protocol": "Udp",
+              "frontendPort": 3391,
+              "backendPort": 3391,
+              "idleTimeoutInMinutes": 5
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[concat(variables('RDSPublicIPAddressNamePrefix'), copyindex())]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "RDSPublicIPAddress"
+      },
+      "copy": {
+        "name": "rdsPublicIPLoop",
+        "count": "[parameters('RDSNumberOfInstances')]"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[concat(parameters('RDSDnsNameForPublicIPPrefix'), copyindex())]"
+        }
+      }
+    },
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('RDSNicNamePrefix'), copyindex())]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "RDSNetworkInterface"
+      },
+      "copy": {
+        "name": "rdsNicLoop",
+        "count": "[parameters('RDSNumberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/loadBalancers/', variables('RDSLoadBalancerName'))]",
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('RDSPublicIPAddressNamePrefix'), copyindex())]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[concat(parameters('RDSStaticPrivateIpPrefix'), add(parameters('RDSStaticPrivateIpValue'), copyindex()))]",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('RDSPublicIPAddressNamePrefix'), copyindex()))]"
+              },
+              "subnet": {
+                "id": "[parameters('subnetRef')]"
+              },
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('RDSLoadBalancerName')), '/backendAddressPools/LoadBalancerBackend')]"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(parameters('RDSVMNamePrefix'), copyindex())]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "RDSGatewayVirtualMachine"
+      },
+      "copy": {
+        "name": "rdsVMLoop",
+        "count": "[parameters('RDSNumberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('RDSNicNamePrefix'), copyindex())]",
+        "[concat('Microsoft.Compute/availabilitySets/', variables('RDSAvailabilitySetName'))]"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('RDSAvailabilitySetName'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('RDSVMSize')]"
+        },
+        "osProfile": {
+          "computerName": "[concat(parameters('RDSVMNamePrefix'), copyindex())]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('RDSVMImagePublisher')]",
+            "offer": "[variables('RDSVMImageOffer')]",
+            "sku": "[variables('RDSVMImageSKU')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat('http://', parameters('StorageName'), '.blob.core.windows.net/', parameters('vhdStorageContainerName'), '/', variables('RDSVMOSDiskName'), copyindex(), '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('RDSNicNamePrefix'), copyindex()))]"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[concat('http://', parameters('diagnosticsStorageName'), '.blob.core.windows.net')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

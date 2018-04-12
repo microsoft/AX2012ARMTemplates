@@ -1,0 +1,329 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Local admin password for the Virtual Machine."
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Local admin username for the Virtual Machine."
+      }
+    },
+    "apiVersion": {
+      "type": "string",
+      "metadata": {
+        "description": "The ARM Template API Version"
+      }
+    },
+    "BIDnsNameForPublicIPPrefix": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "Globally unique DNS Name for the Public IP used to access the RDS Virtual Machine."
+      }
+    },
+    "BILBDnsNameForPublicIP": {
+      "type": "string",
+      "minLength": 1,
+      "metadata": {
+        "description": "Globally unique DNS Name for the Public IP used to access the BI load balancer."
+      }
+    },
+    "BINumberOfInstances": {
+      "type": "int",
+      "metadata": {
+        "description": "The number of BI instances to be deployed."
+      },
+      "defaultValue": "2"
+    },
+    "BIVMNamePrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "The VM name for the BI Virtual Machine."
+      },
+      "defaultValue": "BIVM"
+    },
+    "BIVMSize": {
+      "type": "string",
+      "metadata": {
+        "description": "The VM size for the BI Virtual Machine."
+      },
+      "allowedValues": [
+        "Standard_D1",
+        "Standard_DS1",
+        "Standard_D2",
+        "Standard_DS2",
+        "Standard_D3",
+        "Standard_DS3",
+        "Standard_D4",
+        "Standard_DS4",
+        "Standard_D11",
+        "Standard_DS11",
+        "Standard_D12",
+        "Standard_DS12",
+        "Standard_D13",
+        "Standard_DS13",
+        "Standard_D14",
+        "Standard_DS14"
+      ]
+    },
+    "diagnosticsStorageName": {
+      "type": "string",
+      "metadata": {
+        "description": "The diagnostics storage name."
+      }
+    },
+    "publicIPAddressType": {
+      "type": "string",
+      "metadata": {
+        "description": "The type of the Public IP address"
+      },
+      "defaultValue": "Dynamic",
+      "allowedValues": [
+        "Dynamic",
+        "Static"
+      ]
+    },
+    "StorageName": {
+      "type": "string",
+      "metadata": {
+        "description": "The storage name."
+      }
+    },
+    "subnetRef": {
+      "type": "string",
+      "metadata": {
+        "description": "The reference of the subnet resource for the network interface."
+      }
+    },
+    "vhdStorageContainerName": {
+      "type": "string",
+      "metadata": {
+        "description": "The vhd storage container name."
+      }
+    }
+  },
+  "variables": {
+    "BIAvailabilitySetName": "BIAvailabilitySet",
+    "BILBPublicIPAddressName": "BILBPublicIP",
+    "BILoadBalancerName": "BILoadBalancer",
+    "BINICNamePrefix": "BIVMNic",
+    "BIPublicIPAddressNamePrefix": "BIPublicIP",
+    "BIVMImageOffer": "SQL2016SP1-WS2016",
+    "BIVMImagePublisher": "MicrosoftSQLServer",
+    "BIVMImageSKU": "Enterprise",
+    "BIVMOSDiskNamePrefix": "[concat(variables('ResourceGroupUniqueString'), '-', 'bios') ]",
+    "ResourceGroupUniqueString": "[uniquestring(resourceGroup().id)]"
+  },
+  "resources": [
+
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('BIAvailabilitySetName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "BIAvailabilitySet"
+      },
+      "properties": { }
+    },
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('BILBpublicIPAddressName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "BILoadBalancePublicIPAddress"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('BILBDnsNameForPublicIP')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "name": "[variables('BILoadBalancerName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "BILoadBalancer"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('BILBpublicIPAddressName'))]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "LoadBalancerFrontend",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('BILBpublicIPAddressName'))]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "LoadBalancerBackend"
+          }
+        ],
+        "probes": [
+          {
+            "name": "lbprobe",
+            "properties": {
+              "protocol": "Tcp",
+              "port": 443,
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2
+            }
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "lbrule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('BILoadBalancerName')), '/frontendIpConfigurations/LoadBalancerFrontend')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('BILoadBalancerName')), '/backendAddressPools/LoadBalancerBackend')]"
+              },
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('BILoadBalancerName')), '/probes/lbprobe')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 443,
+              "backendPort": 443,
+              "idleTimeoutInMinutes": 5
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[concat(variables('BIPublicIPAddressNamePrefix'), copyindex())]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "BIPublicIPAddress"
+      },
+      "copy": {
+        "name": "biPublicIPLoop",
+        "count": "[parameters('BINumberOfInstances')]"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[concat(parameters('BIDnsNameForPublicIPPrefix'), copyindex())]"
+        }
+      }
+    },
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('BINICNamePrefix'), copyindex())]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "BINetworkInterface"
+      },
+      "copy": {
+        "name": "biNicLoop",
+        "count": "[parameters('BInumberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('BIpublicIPAddressNamePrefix'), copyindex())]",
+        "[concat('Microsoft.Network/loadBalancers/', variables('BILoadBalancerName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('BIpublicIPAddressNamePrefix'), copyindex()))]"
+              },
+              "subnet": {
+                "id": "[parameters('subnetRef')]"
+              },
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('BILoadBalancerName')), '/backendAddressPools/LoadBalancerBackend')]"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[concat(parameters('BIVMNamePrefix'), copyindex())]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "BIVirtualMachine"
+      },
+      "copy": {
+        "name": "biVMLoop",
+        "count": "[parameters('BInumberOfInstances')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('BINICNamePrefix'), copyindex())]",
+        "[concat('Microsoft.Compute/availabilitySets/', variables('BIAvailabilitySetName'))]"
+      ],
+      "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('BIAvailabilitySetName'))]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('BIVMSize')]"
+        },
+        "osProfile": {
+          "computerName": "[concat(parameters('BIVMNamePrefix'), copyindex())]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('BIvmImagePublisher')]",
+            "offer": "[variables('BIvmImageOffer')]",
+            "sku": "[variables('BIvmImageSKU')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat('http://', parameters('StorageName'), '.blob.core.windows.net/', parameters('vhdStorageContainerName'), '/', variables('BIvmOSDiskNamePrefix'), copyindex(), '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('BINICNamePrefix'), copyindex()))]"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[concat('http://', parameters('diagnosticsStorageName'), '.blob.core.windows.net')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
